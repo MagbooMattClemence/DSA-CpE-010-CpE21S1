@@ -1,0 +1,78 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <memory>
+
+class GroceryItem {
+protected:
+    std::string name;
+    double price;
+    int quantity;
+public:
+    GroceryItem(std::string itemName, double itemPrice, int itemQuantity)
+        : name(std::move(itemName)), price(itemPrice), quantity(itemQuantity) {}
+
+    virtual ~GroceryItem() = default;
+
+    double calculateSum() const {
+        return price * quantity;
+    }
+
+    void display() const {
+        std::cout << "Item: " << name 
+                  << ", Price: PHP " << price 
+                  << ", Quantity: " << quantity 
+                  << ", Total: PHP " << calculateSum() << std::endl;
+    }
+
+    std::string getName() const {
+        return name;
+    }
+};
+
+class Fruit : public GroceryItem {
+public:
+    Fruit(std::string itemName, double itemPrice, int itemQuantity)
+        : GroceryItem(itemName, itemPrice, itemQuantity) {}
+};
+
+class Vegetable : public GroceryItem {
+public:
+    Vegetable(std::string itemName, double itemPrice, int itemQuantity)
+        : GroceryItem(itemName, itemPrice, itemQuantity) {}
+};
+
+double TotalSum(const std::vector<std::shared_ptr<GroceryItem>>& list) {
+    double total = 0;
+    for (const auto& item : list) {
+        total += item->calculateSum();
+    }
+    return total;
+}
+
+int main() {
+    std::vector<std::shared_ptr<GroceryItem>> GroceryList = {
+        std::make_shared<Fruit>("Apple", 10.0, 7),
+        std::make_shared<Fruit>("Banana", 10.0, 8),
+        std::make_shared<Vegetable>("Broccoli", 60.0, 12),
+        std::make_shared<Vegetable>("Lettuce", 50.0, 10)
+    };
+
+    std::cout << "\n--- Grocery List Details ---" << std::endl;
+    for (const auto& item : GroceryList) {
+        item->display();
+    }
+
+    std::cout << "\nTotal Sum: PHP " << TotalSum(GroceryList) << std::endl;
+
+    GroceryList.erase(std::remove_if(GroceryList.begin(), GroceryList.end(),
+        [](const std::shared_ptr<GroceryItem>& item) { return item->getName() == "Lettuce"; }),
+        GroceryList.end());
+
+    std::cout << "\n--- Updated Grocery List ---" << std::endl;
+    for (const auto& item : GroceryList) {
+        item->display();
+    }
+
+    return 0;
+}
