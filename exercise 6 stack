@@ -1,0 +1,27 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+
+void display (stack<string>pl){
+    while (!pl.empty()) {
+    cout << pl.top () << " ";
+    pl.pop();
+    }
+}
+
+int main()
+{
+    stack <string> pl;
+    // add items into stack
+    pl.push("c++");
+    pl.push("java");
+    pl.push("python");
+    cout<< "initial stack: ";
+    display (pl);
+    
+    pl.pop();
+    pl.pop();
+    cout<< "\n" << " final stack: ";
+    display (pl);
+    return 0;
+}
