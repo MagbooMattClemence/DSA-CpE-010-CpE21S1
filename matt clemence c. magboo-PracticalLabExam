@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node(int d) : data(d), next(nullptr) {}
+};
+
+bool isPrime(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i * i <= n; i++)
+        if (n % i == 0) return false;
+    return true;
+}
+
+void displayList(Node* head) {
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    Node *head = nullptr, *tail = nullptr;
+    for (int i = 2; i < 20; i++) {
+        if (isPrime(i)) {
+            Node* newNode = new Node(i);
+            if (!head) head = tail = newNode;
+            else tail = tail->next = newNode;
+        }
+    }
+    displayList(head);
+    if (head) cout << "Head: " << head->data << ", Tail: " << tail->data << endl;
+    return 0;
+}
